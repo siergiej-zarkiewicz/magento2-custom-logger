@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Zarkiewicz\CustomLogger
+ *
+ * @package Zarkiewicz\CustomLogger
+ * @author Siergiej Zarkiewicz <siergiej.zarkiewicz@gmail.com>
+ * @copyright Siergiej Zarkiewicz <siergiej.zarkiewicz@gmail.com>
+ * @license Open Software License (OSL 3.0)
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- Define a custom log file as a virtual type. -->
+    <virtualType name="ZarkiewiczCustomLoggerDebug" type="Magento\Framework\Logger\Handler\Base">
+        <arguments>
+            <argument name="fileName" xsi:type="string">/var/log/custom_logger_postdispatch.log</argument>
+         </arguments>
+    </virtualType>
+    <!-- Define the handler in another virtual type with a unique name. -->
+    <virtualType name="ZarkiewiczCustomLogger" type="Magento\Framework\Logger\Monolog">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="debug" xsi:type="object">ZarkiewiczCustomLoggerDebug</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <!-- Inject the ZarkiewiczCustomLogger virtual type in the  object. -->
+    <type name="Zarkiewicz\CustomLogger\Observer\LoggerPostdispatch">
+        <arguments>
+            <argument name="logger" xsi:type="object">ZarkiewiczCustomLogger</argument>
+        </arguments>
+    </type>
+</config>
